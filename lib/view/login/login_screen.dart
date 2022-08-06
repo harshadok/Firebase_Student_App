@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentapp_firebase/view/user_login/user_login.dart';
 import 'package:studentapp_firebase/view_model/auth/auth_provider.dart';
 
 import '../wodgets/constan_widgets.dart';
@@ -90,23 +91,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.grey.withOpacity(0.5))
                       ],
                       borderRadius: BorderRadius.circular(30)),
+                  //email textfrom filed
+
                   child: TextFormField(
                     controller: emailController,
-                    // validator: (value) {
-                    //   if (value == null || value.isEmpty) {
-                    //     return ("Please Enter Your Email");
-                    //   }
-                    //   if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-                    //       .hasMatch(value)) {
-                    //     return ("Please Enter a valid email");
-                    //   }
-                    //   return null;
-                    // },
-                    // onSaved: (value) {
-                    //   emailController.text = value!;
-                    // },
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
+                        hintText: "Your eamil id",
+                        prefixIcon: const Icon(
+                          Icons.email,
+                          color: Colors.orange,
+                        ),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                             borderSide: const BorderSide(
@@ -130,22 +125,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.grey.withOpacity(0.5))
                       ],
                       borderRadius: BorderRadius.circular(30)),
+                  //password textfrom filed
                   child: TextFormField(
-                    // validator: (value) {
-                    //   RegExp regexp = RegExp(r'^.{6,}$');
-                    //   if (value == null || value.isEmpty) {
-                    //     return ("Please Enter Your Password");
-                    //   }
-                    //   if (!regexp.hasMatch(value)) {
-                    //     return ("Please Enter A Valide Password(min 6 Character)");
-                    //   }
-                    //   return null;
-                    // },
                     controller: passwordController,
-                    // onSaved: (value) {
-                    //   passwordController.text = value!;
-                    // },
                     decoration: InputDecoration(
+                        hintText: "Your password",
+                        prefixIcon: const Icon(
+                          Icons.lock,
+                          color: Colors.orange,
+                        ),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                             borderSide: const BorderSide(
@@ -173,28 +161,34 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(
             height: 50,
           ),
-          Container(
-            width: width * 0.5,
-            height: hight * 0.08,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                image: const DecorationImage(
-                    image: AssetImage("img/logintab2.png"), fit: BoxFit.cover)),
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  singIn(authProvider);
-                },
-                child: const Text(
-                  "Sign in",
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+          if (authProvider.isloading)
+            const CircularProgressIndicator(
+              strokeWidth: 2,
+            ),
+          if (!authProvider.isloading)
+            Container(
+              width: width * 0.5,
+              height: hight * 0.08,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  image: const DecorationImage(
+                      image: AssetImage("img/logintab2.png"),
+                      fit: BoxFit.cover)),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {
+                    singIn(authProvider);
+                  },
+                  child: const Text(
+                    "Sign in",
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
                 ),
               ),
             ),
-          ),
           SizedBox(height: width * 0.15),
           RichText(
             text: TextSpan(
@@ -209,7 +203,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           fontWeight: FontWeight.bold),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          Navigator.of(context).pushNamed("Create");
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const Createpage()));
                         }),
                 ]),
           )
