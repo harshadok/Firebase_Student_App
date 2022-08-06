@@ -1,21 +1,47 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studentapp_firebase/view_model/auth/auth.dart';
+import 'package:studentapp_firebase/view_model/auth/auth_provider.dart';
 
 import '../wodgets/constan_widgets.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
+
   final formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future singIn(AuthProvider provider) async {
+    final msg =
+        await provider.signIn(emailController.text, passwordController.text);
+
+    if (msg == '') return;
+
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double hight = MediaQuery.of(context).size.height;
+    final authProvider = context.watch<AuthProvider>();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -66,19 +92,19 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30)),
                   child: TextFormField(
                     controller: emailController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return ("Please Enter Your Email");
-                      }
-                      if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-                          .hasMatch(value)) {
-                        return ("Please Enter a valid email");
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      emailController.text = value!;
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return ("Please Enter Your Email");
+                    //   }
+                    //   if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                    //       .hasMatch(value)) {
+                    //     return ("Please Enter a valid email");
+                    //   }
+                    //   return null;
+                    // },
+                    // onSaved: (value) {
+                    //   emailController.text = value!;
+                    // },
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
@@ -105,20 +131,20 @@ class LoginScreen extends StatelessWidget {
                       ],
                       borderRadius: BorderRadius.circular(30)),
                   child: TextFormField(
-                    validator: (value) {
-                      RegExp regexp = RegExp(r'^.{6,}$');
-                      if (value == null || value.isEmpty) {
-                        return ("Please Enter Your Password");
-                      }
-                      if (!regexp.hasMatch(value)) {
-                        return ("Please Enter A Valide Password(min 6 Character)");
-                      }
-                      return null;
-                    },
+                    // validator: (value) {
+                    //   RegExp regexp = RegExp(r'^.{6,}$');
+                    //   if (value == null || value.isEmpty) {
+                    //     return ("Please Enter Your Password");
+                    //   }
+                    //   if (!regexp.hasMatch(value)) {
+                    //     return ("Please Enter A Valide Password(min 6 Character)");
+                    //   }
+                    //   return null;
+                    // },
                     controller: passwordController,
-                    onSaved: (value) {
-                      passwordController.text = value!;
-                    },
+                    // onSaved: (value) {
+                    //   passwordController.text = value!;
+                    // },
                     decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
@@ -147,39 +173,27 @@ class LoginScreen extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
-          Consumer<AuthenticationService>(
-            builder: (BuildContext context, signIn, Widget? child) {
-              return Container(
-                width: width * 0.5,
-                height: hight * 0.08,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    image: const DecorationImage(
-                        image: AssetImage("img/logintab2.png"),
-                        fit: BoxFit.cover)),
-                child: Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      // if (formKey.currentContext != null) {
-
-                      signIn.signIn(
-                          contex: context,
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim());
-
-                      //  }
-                    },
-                    child: const Text(
-                      "Sign in",
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ),
+          Container(
+            width: width * 0.5,
+            height: hight * 0.08,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                image: const DecorationImage(
+                    image: AssetImage("img/logintab2.png"), fit: BoxFit.cover)),
+            child: Center(
+              child: GestureDetector(
+                onTap: () {
+                  singIn(authProvider);
+                },
+                child: const Text(
+                  "Sign in",
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
-              );
-            },
+              ),
+            ),
           ),
           SizedBox(height: width * 0.15),
           RichText(
