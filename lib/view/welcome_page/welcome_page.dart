@@ -147,65 +147,34 @@ class _HomePageState extends State<HomePage> {
               stream: products.snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
                 if (streamSnapshot.hasData) {
-                  return Column(children: [
-                    Container(
-                      height: hight * 0.9,
-                      width: width,
-                      child: ListView.builder(
-                        itemCount: streamSnapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          final DocumentSnapshot documentSnapshot =
-                              streamSnapshot.data!.docs[index];
-                          return Card(
-                            margin: const EdgeInsets.all(10),
-                            child: ListTile(
-                              title: Text(documentSnapshot['firstname']),
-                              subtitle: Text(documentSnapshot['phone']),
-                              trailing: SizedBox(
-                                width: 100,
-                                child: Row(
-                                  children: [
-                                    IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () =>
-                                            _update(documentSnapshot)),
-                                    IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        onPressed: () =>
-                                            _delete(documentSnapshot.id)),
-                                  ],
-                                ),
-                              ),
+                  return ListView.builder(
+                    itemCount: streamSnapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      final DocumentSnapshot documentSnapshot =
+                          streamSnapshot.data!.docs[index];
+                      return Card(
+                        margin: const EdgeInsets.all(10),
+                        child: ListTile(
+                          title: Text(documentSnapshot['fisrname']),
+                          subtitle: Text(documentSnapshot['phone'].toString()),
+                          trailing: SizedBox(
+                            width: 100,
+                            child: Row(
+                              children: [
+                                IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    onPressed: () => _update(documentSnapshot)),
+                                IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () =>
+                                        _delete(documentSnapshot.id)),
+                              ],
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    Container(
-                      width: width * 0.5,
-                      height: hight * 0.08,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          image: const DecorationImage(
-                              image: AssetImage("img/logintab2.png"),
-                              fit: BoxFit.cover)),
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            context.read<AuthProvider>().signOut();
-                            // Navigator.of(context).pushNamed("Signout");
-                          },
-                          child: const Text(
-                            "Sign out",
-                            style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
                           ),
                         ),
-                      ),
-                    ),
-                  ]);
+                      );
+                    },
+                  );
                 }
 
                 return const Center(
@@ -213,6 +182,33 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
+            //     Container(
+            //       width: width * 0.5,
+            //       height: hight * 0.08,
+            //       decoration: BoxDecoration(
+            //           borderRadius: BorderRadius.circular(30),
+            //           image: const DecorationImage(
+            //               image: AssetImage("img/logintab2.png"),
+            //               fit: BoxFit.cover)),
+            //       child: Center(
+            //         child: GestureDetector(
+            //           onTap: () {
+            //             context.read<AuthProvider>().signOut();
+            //             // Navigator.of(context).pushNamed("Signout");
+            //           },
+            //           child: const Text(
+            //             "Sign out",
+            //             style: TextStyle(
+            //                 fontSize: 25,
+            //                 fontWeight: FontWeight.bold,
+            //                 color: Colors.white),
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ]),
+            // );
+
             // floatingActionButton: FloatingActionButton(
             //   onPressed: () => _create(),
             //   child: const Icon(Icons.add),
