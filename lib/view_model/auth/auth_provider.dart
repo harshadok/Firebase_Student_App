@@ -9,7 +9,7 @@ class AuthProvider extends ChangeNotifier {
 
   Stream<User?> stream() => fb.authStateChanges();
 
-  Future<String> signIn(String email, String password) async {
+  Future signIn(String email, String password) async {
     try {
       isloading = true;
       notifyListeners();
@@ -25,7 +25,7 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<String> signUp(String email, String password) async {
+  Future signUp(String email, String password) async {
     try {
       isloading = true;
       notifyListeners();

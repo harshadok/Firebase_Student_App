@@ -40,7 +40,7 @@ class _CreatepageState extends State<Createpage> {
     return StreamBuilder<User?>(
         stream: authProvider.stream(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) return const WelcomePage();
+          if (snapshot.hasData) return HomePage();
 
           return Scaffold(
             resizeToAvoidBottomInset: false,
